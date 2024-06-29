@@ -91,3 +91,5 @@ def eval_model(image_file):
     outputs = outputs.strip()
     if outputs.endswith(stop_str):
         outputs = outputs[: -len(stop_str)]
+    
+    return outputs  # Return the generated caption
