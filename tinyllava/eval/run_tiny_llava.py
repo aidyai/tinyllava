@@ -1,20 +1,19 @@
-import re
 import requests
 from PIL import Image
 from io import BytesIO
-
 import torch
 from transformers import PreTrainedModel
-
 from tinyllava.utils import *
 from tinyllava.data import *
 from tinyllava.model import *
 
+# Initialize the model and other components once
+disable_torch_init()
+model, tokenizer, image_processor, context_len = load_pretrained_model("tinyllava/TinyLLaVA-Phi-2-SigLIP-3.1B")
 
 def image_parser(image_file, sep):
     out = image_file.split(sep)
     return out
-
 
 def load_image(image_file):
     if image_file.startswith("http") or image_file.startswith("https"):
@@ -24,7 +23,6 @@ def load_image(image_file):
         image = Image.open(image_file).convert("RGB")
     return image
 
-
 def load_images(image_files):
     out = []
     for image_file in image_files:
@@ -32,12 +30,22 @@ def load_images(image_files):
         out.append(image)
     return out
 
+def eval_model(image_file):
+    prompt = "List all damaged parts?"
+    conv_mode = "phi"
 
-# Initialize the model and other components once
-disable_torch_init()
-model, tokenizer, image_processor, context_len = load_pretrained_model("tinyllava/TinyLLaVA-Phi-2-SigLIP-3.1B")
+    args = type('Args', (), {
+        "model_base": None,
+        "query": prompt,
+        "conv_mode": conv_mode,
+        "image_file": image_file,
+        "sep": ",",
+        "temperature": 0,
+        "top_p": None,
+        "num_beams": 1,
+        "max_new_tokens": 512
+    })()
 
-def eval_model(args):
     qs = args.query
     qs = DEFAULT_IMAGE_TOKEN + "\n" + qs
 
@@ -83,23 +91,5 @@ def eval_model(args):
     outputs = outputs.strip()
     if outputs.endswith(stop_str):
         outputs = outputs[: -len(stop_str)]
-    #outputs = outputs.strip()
-    #return outputs
-    outputs = outputs.strip()
-    print(outputs)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--image-file", type=str, required=True)
-    parser.add_argument("--query", type=str, required=True)
-    parser.add_argument("--conv-mode", type=str, default=None)
-    parser.add_argument("--sep", type=str, default=",")
-    parser.add_argument("--temperature", type=float, default=0.2)
-    parser.add_argument("--top_p", type=float, default=None)
-    parser.add_argument("--num_beams", type=int, default=1)
-    parser.add_argument("--max_new_tokens", type=int, default=512)
-    args = parser.parse_args()
-
-
-    eval_model(args)
+    
+    return outputs  # Return the generated caption
