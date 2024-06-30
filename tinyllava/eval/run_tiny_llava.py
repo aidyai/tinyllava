@@ -30,8 +30,9 @@ def load_images(image_files):
         out.append(image)
     return out
 
-def eval_model(image_file):
-    prompt = "List all damaged parts?"
+def eval_model(image_file,prompt:str):
+   #prompt = "List all damaged parts?"
+
     conv_mode = "phi"
 
     args = type('Args', (), {
@@ -45,6 +46,7 @@ def eval_model(image_file):
         "num_beams": 1,
         "max_new_tokens": 512
     })()
+
 
     qs = args.query
     qs = DEFAULT_IMAGE_TOKEN + "\n" + qs
