@@ -93,9 +93,5 @@ def eval_model(image_file,prompt:str):
     outputs = outputs.strip()
     if outputs.endswith(stop_str):
         outputs = outputs[: -len(stop_str)]
-<<<<<<< HEAD
-    
-=======
     
     return outputs  # Return the generated caption
->>>>>>> 945362423571067befed766ce44436e971629d7a
