@@ -7,10 +7,10 @@ from tinyllava.utils import logger_setting, log_trainable_params
 from tinyllava.model import ModelArguments, DataArguments
 from tinyllava.data.dataset import make_supervised_data_module
 
-DATA_PATH = "/home/ai/data/llava/dataset/text_files/llava_v1_5_mix665k.json"
-IMAGE_PATH = "/home/ai/data/llava/dataset"
+DATA_PATH = "./captions.json"
+IMAGE_PATH = "./image"
 MODEL_MAX_LENGTH = 3072
-OUTPUT_DIR = "/mnt/data/sata/yinghu/checkpoints/llava_factory/custom-finetune-TinyLLaVA-Phi-2-SigLIP-3.1B-lora"
+OUTPUT_DIR = "./auto-insurance-phi-2-sigLIP-3.1B-lora"
 PRETRAINED_MODEL_PATH = "tinyllava/TinyLLaVA-Phi-2-SigLIP-3.1B"
 DEEPSPEED_CONFIG = "./scripts/zero2.json"
 
