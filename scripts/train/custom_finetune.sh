@@ -1,10 +1,10 @@
-DATA_PATH = "./captions.json"
-IMAGE_PATH = "./image"
+DATA_PATH = "/content/tinyllava/captions.json"
+IMAGE_PATH = "/content/tinyllava/image"
 MODEL_MAX_LENGTH = 3072
 OUTPUT_DIR = "./auto-insurance-phi-2-sigLIP-3.1B-lora"
 
-
-deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/custom_finetune.py \
+# !deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/custom_finetune.py \
+!deepspeed --include localhost:0 --master_port 29501 tinyllava/train/custom_finetune.py \
     --deepspeed ./scripts/zero2.json \
     --data_path  $DATA_PATH \
     --image_folder $IMAGE_PATH \
@@ -23,7 +23,7 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/custom
     --group_by_modality_length False \
     --pretrained_model_path "tinyllava/TinyLLaVA-Phi-2-SigLIP-3.1B" \
     --output_dir $OUTPUT_DIR \
-    --num_train_epochs 1 \
+    --num_train_epochs 10 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 8 \
@@ -41,6 +41,6 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/custom
     --gradient_checkpointing True \
     --dataloader_num_workers 8 \
     --lazy_preprocess True \
-    --report_to tensorboard \
+    --report_to wandb \
     --tokenizer_use_fast False \
-    --run_name custom-finetune-TinyLLaVA-Phi-2-SigLIP-3.1B-lora
+    --run_name auto-insurance-vLLm-Lora
